@@ -3,436 +3,157 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Download Hub — Admin</title>
+<title>Admin — Download Hub</title>
 <style>
-:root {
-  --bg: #0a0c10;
-  --surface: #111520;
-  --card: #161c2a;
-  --border: #1f2a3d;
-  --accent: #5865F2;
-  --accent-hover: #4752c4;
-  --danger: #e74c3c;
-  --success: #2ecc71;
-  --warn: #ff9f1c;
-  --text: #e8ecf4;
-  --muted: #7a85a0;
-  --input-bg: #0d1017;
-}
+:root { --bg:#0a0c10; --surface:#111520; --card:#161c2a; --border:#1f2a3d; --accent:#5865F2; --accent-h:#4752c4; --danger:#e74c3c; --success:#2ecc71; --warn:#ff9f1c; --text:#e8ecf4; --muted:#7a85a0; --in:#0d1017; }
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',system-ui,sans-serif;}
+body{background:var(--bg);color:var(--text);min-height:100vh;}
 
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+/* LOGIN */
+#loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:radial-gradient(ellipse at 50% 40%,#0d1535 0%,var(--bg) 70%);}
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2.5rem;width:100%;max-width:400px;box-shadow:0 40px 80px rgba(0,0,0,0.6);animation:fadeUp 0.4s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.lock-icon{font-size:2.5rem;margin-bottom:1rem;display:block;}
+.login-box h1{font-size:1.6rem;margin-bottom:0.3rem;}
+.login-box>p{color:var(--muted);font-size:0.9rem;margin-bottom:2rem;}
+.field{margin-bottom:1.2rem;}
+.field label{display:block;font-size:0.82rem;color:var(--muted);margin-bottom:0.4rem;}
+.field input{width:100%;padding:0.8rem 1rem;border-radius:10px;border:1.5px solid var(--border);background:var(--in);color:var(--text);font-size:0.95rem;outline:none;transition:border-color 0.2s;font-family:inherit;}
+.field input:focus{border-color:var(--accent);}
+.field input.error{border-color:var(--danger);animation:shake 0.3s ease;}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.login-error{background:rgba(231,76,60,0.1);border:1px solid rgba(231,76,60,0.3);color:#f08080;padding:0.7rem 1rem;border-radius:8px;font-size:0.88rem;margin-bottom:1rem;display:none;}
+#adminPanel{display:none;}
 
-body { background: var(--bg); color: var(--text); min-height: 100vh; }
+/* TOPBAR */
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+.topbar-left{display:flex;align-items:center;gap:0.75rem;}
+.topbar-logo{font-size:1.2rem;font-weight:800;}
+.topbar-badge{background:rgba(88,101,242,0.2);color:var(--accent);border:1px solid rgba(88,101,242,0.35);padding:0.2rem 0.6rem;border-radius:999px;font-size:0.72rem;font-weight:700;text-transform:uppercase;}
+.topbar-right{display:flex;gap:0.75rem;align-items:center;}
 
-/* ===== LOGIN SCREEN ===== */
-#loginScreen {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background: radial-gradient(ellipse at 50% 40%, #0d1535 0%, var(--bg) 70%);
-}
+/* BUTTONS */
+.btn-primary{width:100%;padding:0.85rem;border-radius:10px;border:none;background:var(--accent);color:white;font-size:1rem;font-weight:700;cursor:pointer;transition:background 0.2s,transform 0.15s;box-shadow:0 8px 20px rgba(88,101,242,0.4);}
+.btn-primary:hover{background:var(--accent-h);transform:translateY(-1px);}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+.btn-sm{padding:0.5rem 1rem;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-size:0.85rem;cursor:pointer;transition:color 0.2s,border-color 0.2s;}
+.btn-sm:hover{color:var(--text);border-color:var(--muted);}
+.btn-accent{padding:0.5rem 1rem;border-radius:8px;border:none;background:var(--accent);color:white;font-size:0.85rem;font-weight:700;cursor:pointer;transition:background 0.2s;}
+.btn-accent:hover{background:var(--accent-h);}
+.btn-danger{padding:0.4rem 0.8rem;border-radius:7px;border:1.5px solid rgba(231,76,60,0.3);background:rgba(231,76,60,0.08);color:#f08080;font-size:0.8rem;cursor:pointer;transition:background 0.2s,border-color 0.2s;}
+.btn-danger:hover{background:rgba(231,76,60,0.2);border-color:var(--danger);}
+.btn-edit{padding:0.4rem 0.8rem;border-radius:7px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-size:0.8rem;cursor:pointer;transition:color 0.2s,border-color 0.2s;}
+.btn-edit:hover{color:var(--text);border-color:var(--muted);}
 
-.login-box {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 2.5rem;
-  width: 100%;
-  max-width: 400px;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.6);
-  animation: fadeUp 0.4s ease;
-}
+/* CONTENT */
+.main-content{max-width:1000px;margin:0 auto;padding:2rem;}
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+/* SETTINGS PANEL */
+.settings-panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:1.5rem;overflow:hidden;}
+.settings-header{padding:1rem 1.5rem;display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none;}
+.settings-header:hover{background:rgba(255,255,255,0.02);}
+.settings-header h3{font-size:0.95rem;display:flex;align-items:center;gap:0.6rem;}
+.settings-body{display:none;border-top:1px solid var(--border);padding:1.25rem 1.5rem 1.5rem;}
+.settings-body.open{display:block;}
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+@media(max-width:600px){.settings-grid{grid-template-columns:1fr;}}
+.settings-note{background:rgba(255,159,28,0.08);border:1px solid rgba(255,159,28,0.25);border-radius:8px;padding:0.75rem 1rem;font-size:0.82rem;color:#d4a855;margin-bottom:1rem;line-height:1.6;}
+.settings-note code{background:rgba(255,255,255,0.08);padding:0.1rem 0.35rem;border-radius:4px;font-size:0.78rem;}
+.settings-status{font-size:0.82rem;color:var(--muted);margin-top:0.75rem;}
+.settings-status.ok{color:var(--success);}
+.settings-status.error{color:var(--danger);}
+.divider{border:none;border-top:1px solid var(--border);margin:1.25rem 0;}
+.subsection-title{font-size:0.82rem;color:var(--muted);font-weight:600;margin-bottom:0.75rem;text-transform:uppercase;letter-spacing:0.04em;}
 
-.login-box h1 { font-size: 1.6rem; margin-bottom: 0.3rem; }
-.login-box p  { color: var(--muted); font-size: 0.9rem; margin-bottom: 2rem; }
+/* BANNER PREVIEW */
+.banner-preview{padding:0.65rem 1rem;border-radius:8px;font-size:0.85rem;font-weight:600;margin-top:0.75rem;}
+.banner-preview.blue  {background:rgba(88,101,242,0.12);border:1px solid rgba(88,101,242,0.35);color:#a0a8ff;}
+.banner-preview.accent{background:rgba(255,159,28,0.12);border:1px solid rgba(255,159,28,0.35);color:var(--warn);}
+.banner-preview.green {background:rgba(46,204,113,0.12);border:1px solid rgba(46,204,113,0.35);color:#5dde8e;}
+.banner-preview.red   {background:rgba(231,76,60,0.12); border:1px solid rgba(231,76,60,0.35); color:#f08080;}
 
-.lock-icon {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  display: block;
-}
+/* FORM FIELDS */
+.form-field{margin-bottom:0;}
+.form-field label{display:block;font-size:0.82rem;color:var(--muted);margin-bottom:0.4rem;}
+.form-field input,.form-field select,.form-field textarea{width:100%;padding:0.7rem 0.9rem;border-radius:9px;border:1.5px solid var(--border);background:var(--in);color:var(--text);font-size:0.9rem;outline:none;transition:border-color 0.2s;font-family:inherit;}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--accent);}
+.form-field textarea{resize:vertical;min-height:70px;}
+.form-field select option{background:#1a1f2e;}
+.checkbox-field{display:flex;align-items:center;gap:0.6rem;margin-top:0.15rem;}
+.checkbox-field input[type="checkbox"]{width:16px;height:16px;accent-color:var(--success);cursor:pointer;}
+.checkbox-field label{font-size:0.88rem;color:var(--text);cursor:pointer;margin:0;}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;}
 
-.field { margin-bottom: 1.2rem; }
-.field label { display: block; font-size: 0.82rem; color: var(--muted); margin-bottom: 0.4rem; }
-.field input {
-  width: 100%;
-  padding: 0.8rem 1rem;
-  border-radius: 10px;
-  border: 1.5px solid var(--border);
-  background: var(--input-bg);
-  color: var(--text);
-  font-size: 0.95rem;
-  outline: none;
-  transition: border-color 0.2s;
-}
-.field input:focus { border-color: var(--accent); }
-.field input.error { border-color: var(--danger); animation: shake 0.3s ease; }
-@keyframes shake {
-  0%,100% { transform: translateX(0); }
-  25%      { transform: translateX(-6px); }
-  75%      { transform: translateX(6px); }
-}
+/* TOGGLE SWITCH */
+.toggle{position:relative;display:inline-block;width:42px;height:24px;flex-shrink:0;}
+.toggle input{opacity:0;width:0;height:0;}
+.toggle-slider{position:absolute;inset:0;background:#2a3045;border-radius:24px;cursor:pointer;transition:background 0.2s;}
+.toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:white;border-radius:50%;transition:transform 0.2s;}
+.toggle input:checked+.toggle-slider{background:var(--success);}
+.toggle input:checked+.toggle-slider::before{transform:translateX(18px);}
 
-.btn-primary {
-  width: 100%;
-  padding: 0.85rem;
-  border-radius: 10px;
-  border: none;
-  background: var(--accent);
-  color: white;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.15s;
-  box-shadow: 0 8px 20px rgba(88,101,242,0.4);
-}
-.btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
-.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+/* CARD LIST */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
+.section-header h2{font-size:1.1rem;}
+.card-count{background:var(--card);border:1px solid var(--border);color:var(--muted);padding:0.25rem 0.65rem;border-radius:999px;font-size:0.78rem;}
+.cards-list{display:flex;flex-direction:column;gap:0.6rem;margin-bottom:2rem;}
 
-.login-error {
-  background: rgba(231,76,60,0.1);
-  border: 1px solid rgba(231,76,60,0.3);
-  color: #f08080;
-  padding: 0.7rem 1rem;
-  border-radius: 8px;
-  font-size: 0.88rem;
-  margin-bottom: 1rem;
-  display: none;
-}
+/* DRAGGABLE CARD */
+.admin-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:0.9rem 1.1rem;display:flex;align-items:center;gap:0.85rem;transition:border-color 0.15s,box-shadow 0.15s;cursor:default;}
+.admin-card:hover{border-color:#2d3a52;}
+.admin-card.drag-over{border-top:3px solid var(--accent);margin-top:-2px;}
+.admin-card.dragging{opacity:0.45;box-shadow:0 16px 40px rgba(0,0,0,0.5);}
+.drag-handle{color:#3a4258;font-size:1.1rem;cursor:grab;padding:0.2rem;flex-shrink:0;user-select:none;line-height:1;}
+.drag-handle:hover{color:var(--muted);}
+.drag-handle:active{cursor:grabbing;}
+.admin-card-info{flex:1;min-width:0;}
+.admin-card-info h4{font-size:0.92rem;margin-bottom:0.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.admin-card-meta{font-size:0.75rem;color:var(--muted);}
+.admin-card-tag{display:inline-block;background:rgba(255,159,28,0.12);color:var(--warn);padding:0.15rem 0.5rem;border-radius:999px;font-size:0.68rem;font-weight:700;margin-right:0.4rem;}
+.new-badge{display:inline-block;background:rgba(46,204,113,0.15);color:var(--success);padding:0.15rem 0.45rem;border-radius:999px;font-size:0.65rem;font-weight:700;}
+.admin-card-actions{display:flex;gap:0.4rem;flex-shrink:0;}
 
-/* ===== ADMIN PANEL ===== */
-#adminPanel { display: none; }
+/* FORM PANEL */
+#cardFormPanel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.5rem;display:none;animation:fadeUp 0.25s ease;}
+#cardFormPanel h3{font-size:1rem;margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+@media(max-width:600px){.form-grid{grid-template-columns:1fr;}}
+.form-grid .full{grid-column:1/-1;}
+.form-actions{display:flex;gap:0.75rem;margin-top:1.5rem;}
 
-.topbar {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: 1rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 50;
-}
+/* CHANGELOG SECTION */
+.cl-entry{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1rem 1.1rem;display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:0.6rem;}
+.cl-entry-info h4{font-size:0.9rem;margin-bottom:0.15rem;}
+.cl-entry-info p{font-size:0.75rem;color:var(--muted);}
+.cl-version{display:inline-block;background:rgba(88,101,242,0.15);color:#a0a8ff;border:1px solid rgba(88,101,242,0.3);padding:0.15rem 0.5rem;border-radius:999px;font-size:0.68rem;font-weight:700;margin-right:0.4rem;}
 
-.topbar-left { display: flex; align-items: center; gap: 0.75rem; }
-.topbar-logo { font-size: 1.2rem; font-weight: 800; }
-.topbar-badge {
-  background: rgba(88,101,242,0.2);
-  color: var(--accent);
-  border: 1px solid rgba(88,101,242,0.35);
-  padding: 0.2rem 0.6rem;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-}
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:3rem;color:var(--muted);border:2px dashed var(--border);border-radius:14px;}
+.empty-state div{font-size:2rem;margin-bottom:0.5rem;}
 
-.topbar-right { display: flex; gap: 0.75rem; align-items: center; }
+/* SAVE BAR */
+#saveBar{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);padding:0.9rem 2rem;display:flex;align-items:center;justify-content:space-between;z-index:40;transform:translateY(100%);transition:transform 0.3s ease;}
+#saveBar.visible{transform:translateY(0);}
+.save-msg{font-size:0.88rem;color:var(--muted);}
 
-.btn-sm {
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  border: 1.5px solid var(--border);
-  background: transparent;
-  color: var(--muted);
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: color 0.2s, border-color 0.2s;
-}
-.btn-sm:hover { color: var(--text); border-color: var(--muted); }
+/* LOADING */
+#loadingOverlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:200;display:none;align-items:center;justify-content:center;flex-direction:column;gap:1rem;backdrop-filter:blur(3px);}
+#loadingOverlay.show{display:flex;}
+.spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loadingOverlay p{color:var(--muted);font-size:0.9rem;}
 
-.btn-accent {
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  border: none;
-  background: var(--accent);
-  color: white;
-  font-size: 0.85rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.btn-accent:hover { background: var(--accent-hover); }
-
-.btn-danger {
-  padding: 0.4rem 0.8rem;
-  border-radius: 7px;
-  border: 1.5px solid rgba(231,76,60,0.3);
-  background: rgba(231,76,60,0.08);
-  color: #f08080;
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
-}
-.btn-danger:hover { background: rgba(231,76,60,0.2); border-color: var(--danger); }
-
-.main-content { max-width: 1000px; margin: 0 auto; padding: 2rem; }
-
-/* Settings panel */
-.settings-panel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  margin-bottom: 2rem;
-  overflow: hidden;
-}
-
-.settings-header {
-  padding: 1rem 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  user-select: none;
-}
-.settings-header:hover { background: rgba(255,255,255,0.02); }
-.settings-header h3 { font-size: 0.95rem; display: flex; align-items: center; gap: 0.6rem; }
-.settings-body {
-  padding: 0 1.5rem 1.5rem;
-  display: none;
-  border-top: 1px solid var(--border);
-  padding-top: 1.25rem;
-}
-.settings-body.open { display: block; }
-
-.settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
-@media (max-width: 600px) { .settings-grid { grid-template-columns: 1fr; } }
-
-.settings-note {
-  background: rgba(255,159,28,0.08);
-  border: 1px solid rgba(255,159,28,0.25);
-  border-radius: 8px;
-  padding: 0.75rem 1rem;
-  font-size: 0.82rem;
-  color: #d4a855;
-  margin-bottom: 1rem;
-  line-height: 1.5;
-}
-
-.settings-status {
-  font-size: 0.82rem;
-  color: var(--muted);
-  margin-top: 0.75rem;
-}
-.settings-status.ok    { color: var(--success); }
-.settings-status.error { color: var(--danger); }
-
-/* Card list */
-.section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.25rem;
-}
-.section-header h2 { font-size: 1.1rem; }
-
-.card-count {
-  background: var(--card);
-  border: 1px solid var(--border);
-  color: var(--muted);
-  padding: 0.25rem 0.65rem;
-  border-radius: 999px;
-  font-size: 0.78rem;
-}
-
-.cards-list { display: flex; flex-direction: column; gap: 0.75rem; }
-
-.admin-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1rem 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  transition: border-color 0.2s;
-}
-.admin-card:hover { border-color: #2d3a52; }
-
-.admin-card-info { flex: 1; min-width: 0; }
-.admin-card-info h4 { font-size: 0.95rem; margin-bottom: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.admin-card-meta { font-size: 0.78rem; color: var(--muted); }
-
-.admin-card-tag {
-  display: inline-block;
-  background: rgba(255,159,28,0.12);
-  color: var(--warn);
-  padding: 0.15rem 0.55rem;
-  border-radius: 999px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  margin-right: 0.5rem;
-}
-
-.new-badge {
-  display: inline-block;
-  background: rgba(46,204,113,0.15);
-  color: var(--success);
-  padding: 0.15rem 0.5rem;
-  border-radius: 999px;
-  font-size: 0.68rem;
-  font-weight: 700;
-}
-
-.admin-card-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
-
-.btn-edit {
-  padding: 0.4rem 0.8rem;
-  border-radius: 7px;
-  border: 1.5px solid var(--border);
-  background: transparent;
-  color: var(--muted);
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: color 0.2s, border-color 0.2s;
-}
-.btn-edit:hover { color: var(--text); border-color: var(--muted); }
-
-/* Empty state */
-.empty-state {
-  text-align: center;
-  padding: 3rem;
-  color: var(--muted);
-  border: 2px dashed var(--border);
-  border-radius: 14px;
-}
-.empty-state p { margin-top: 0.5rem; font-size: 0.9rem; }
-
-/* Add/Edit form */
-#formPanel {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  display: none;
-  animation: fadeUp 0.25s ease;
-}
-#formPanel h3 { font-size: 1rem; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
-
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-@media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
-.form-grid .full { grid-column: 1 / -1; }
-
-.form-field label { display: block; font-size: 0.82rem; color: var(--muted); margin-bottom: 0.4rem; }
-.form-field input,
-.form-field select,
-.form-field textarea {
-  width: 100%;
-  padding: 0.7rem 0.9rem;
-  border-radius: 9px;
-  border: 1.5px solid var(--border);
-  background: var(--input-bg);
-  color: var(--text);
-  font-size: 0.9rem;
-  outline: none;
-  transition: border-color 0.2s;
-  font-family: inherit;
-}
-.form-field input:focus,
-.form-field select:focus,
-.form-field textarea:focus { border-color: var(--accent); }
-.form-field textarea { resize: vertical; min-height: 70px; }
-
-.form-field select option { background: #1a1f2e; }
-
-.checkbox-field {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  margin-top: 0.25rem;
-}
-.checkbox-field input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--success); cursor: pointer; }
-.checkbox-field label { font-size: 0.88rem; color: var(--text); cursor: pointer; margin: 0; }
-
-.form-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
-
-/* Save status bar */
-#saveBar {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-  padding: 0.9rem 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  z-index: 40;
-  transform: translateY(100%);
-  transition: transform 0.3s ease;
-}
-#saveBar.visible { transform: translateY(0); }
-#saveBar .save-msg { font-size: 0.88rem; color: var(--muted); }
-#saveBar .save-actions { display: flex; gap: 0.75rem; }
-
-/* Toast */
-#adminToast {
-  position: fixed;
-  top: 5rem;
-  right: 2rem;
-  z-index: 100;
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  color: var(--text);
-  padding: 0.7rem 1.2rem;
-  border-radius: 10px;
-  font-size: 0.88rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  opacity: 0;
-  transform: translateY(-8px);
-  pointer-events: none;
-  transition: opacity 0.3s, transform 0.3s;
-}
-#adminToast.show { opacity: 1; transform: translateY(0); }
-
-/* Change password section */
-.change-pw { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
-.change-pw h4 { font-size: 0.88rem; color: var(--muted); margin-bottom: 0.75rem; }
-.pw-row { display: flex; gap: 0.75rem; align-items: flex-end; flex-wrap: wrap; }
-.pw-row .form-field { flex: 1; min-width: 160px; }
-
-/* Loading overlay */
-#loadingOverlay {
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,0.6);
-  z-index: 200;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 1rem;
-  backdrop-filter: blur(3px);
-}
-#loadingOverlay.show { display: flex; }
-.spinner {
-  width: 40px; height: 40px;
-  border: 3px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-#loadingOverlay p { color: var(--muted); font-size: 0.9rem; }
+/* TOAST */
+#adminToast{position:fixed;top:5rem;right:2rem;z-index:100;background:var(--surface);border:1.5px solid var(--border);color:var(--text);padding:0.7rem 1.2rem;border-radius:10px;font-size:0.88rem;box-shadow:0 10px 30px rgba(0,0,0,0.5);opacity:0;transform:translateY(-8px);pointer-events:none;transition:opacity 0.3s,transform 0.3s;max-width:320px;}
+#adminToast.show{opacity:1;transform:translateY(0);}
 </style>
 </head>
 <body>
 
-<div id="loadingOverlay">
-  <div class="spinner"></div>
-  <p id="loadingMsg">Saving to GitHub…</p>
-</div>
-
+<div id="loadingOverlay"><div class="spinner"></div><p id="loadingMsg">Saving…</p></div>
 <div id="adminToast"></div>
 
-<!-- ===== LOGIN SCREEN ===== -->
+<!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-box">
     <span class="lock-icon">🔐</span>
@@ -447,9 +168,8 @@ body { background: var(--bg); color: var(--text); min-height: 100vh; }
   </div>
 </div>
 
-<!-- ===== ADMIN PANEL ===== -->
+<!-- ADMIN PANEL -->
 <div id="adminPanel">
-
   <div class="topbar">
     <div class="topbar-left">
       <span class="topbar-logo">⚙️ Download Hub</span>
@@ -457,121 +177,120 @@ body { background: var(--bg); color: var(--text); min-height: 100vh; }
     </div>
     <div class="topbar-right">
       <a href="index.html" class="btn-sm">← View Site</a>
+      <a href="changelog.html" class="btn-sm">Changelog</a>
       <button class="btn-sm" id="logoutBtn">Log Out</button>
     </div>
   </div>
 
   <div class="main-content">
 
-    <!-- GitHub Settings -->
+    <!-- ===== GITHUB SETTINGS ===== -->
     <div class="settings-panel">
-      <div class="settings-header" id="settingsToggle">
-        <h3>⚙️ GitHub Settings <span style="color:var(--muted);font-size:0.8rem;font-weight:400">— required to save changes</span></h3>
-        <span id="settingsArrow" style="color:var(--muted)">▼</span>
+      <div class="settings-header" data-target="ghBody">
+        <h3>⚙️ GitHub Settings</h3><span class="arrow">▼</span>
       </div>
-      <div class="settings-body" id="settingsBody">
+      <div class="settings-body" id="ghBody">
+        <div class="settings-note">Required to publish changes. Generate a <strong>Fine-grained token</strong> or <strong>Classic token (repo scope)</strong> at GitHub → Settings → Developer Settings → Personal Access Tokens. Classic tokens are more reliable.</div>
+        <div class="settings-grid">
+          <div class="form-field"><label>GitHub Username</label><input type="text" id="ghOwner" placeholder="GreenGrunblocked" /></div>
+          <div class="form-field"><label>Repository Name</label><input type="text" id="ghRepo" placeholder="Download-Hub" /></div>
+          <div class="form-field"><label>Branch</label><input type="text" id="ghBranch" placeholder="main" /></div>
+          <div class="form-field"><label>Personal Access Token</label><input type="password" id="ghToken" placeholder="github_pat_…" autocomplete="off" /></div>
+        </div>
+        <button class="btn-accent" id="saveGH">Save GitHub Settings</button>
+        <div class="settings-status" id="ghStatus"></div>
+
+        <hr class="divider">
+        <div class="subsection-title">🔑 Change Admin Password</div>
+        <div class="settings-grid">
+          <div class="form-field"><label>New Password</label><input type="password" id="newPw1" placeholder="New password" /></div>
+          <div class="form-field"><label>Confirm</label><input type="password" id="newPw2" placeholder="Confirm" /></div>
+        </div>
+        <button class="btn-sm" id="changePwBtn">Update Password</button>
+        <div class="settings-status" id="pwStatus"></div>
+      </div>
+    </div>
+
+    <!-- ===== SUPABASE SETTINGS ===== -->
+    <div class="settings-panel">
+      <div class="settings-header" data-target="sbBody">
+        <h3>🗄️ Supabase Settings <span style="color:var(--muted);font-size:0.78rem;font-weight:400">— ratings & download counts</span></h3><span class="arrow">▼</span>
+      </div>
+      <div class="settings-body" id="sbBody">
         <div class="settings-note">
-          ⚠️ To save cards to your repo, enter your GitHub details below. Your Personal Access Token needs <strong>Contents: Read &amp; Write</strong> permission.
-          Create one at <strong>GitHub → Settings → Developer Settings → Personal Access Tokens → Fine-grained tokens</strong>.
-          These are stored only in your browser's localStorage.
+          1. Create a free project at <strong>supabase.com</strong><br>
+          2. Run this SQL in your Supabase SQL Editor:<br><br>
+          <code>create table card_stats (card_id text primary key, download_count bigint default 0, rating_total bigint default 0, rating_count bigint default 0);</code><br>
+          <code>alter table card_stats enable row level security;</code><br>
+          <code>create policy "pub" on card_stats for all using (true) with check (true);</code><br>
+          <code>create or replace function increment_download(p_card_id text) returns void language plpgsql as $$ begin insert into card_stats(card_id,download_count) values(p_card_id,1) on conflict(card_id) do update set download_count=card_stats.download_count+1; end; $$;</code><br>
+          <code>create or replace function add_rating(p_card_id text,p_rating int) returns void language plpgsql as $$ begin insert into card_stats(card_id,rating_total,rating_count) values(p_card_id,p_rating,1) on conflict(card_id) do update set rating_total=card_stats.rating_total+p_rating,rating_count=card_stats.rating_count+1; end; $$;</code><br>
+          <code>grant execute on function increment_download to anon; grant execute on function add_rating to anon;</code><br><br>
+          3. Find your URL and anon key under <strong>Project Settings → API</strong>
         </div>
         <div class="settings-grid">
-          <div class="form-field">
-            <label>GitHub Username / Org</label>
-            <input type="text" id="ghOwner" placeholder="e.g. GreenGrunblocked" />
-          </div>
-          <div class="form-field">
-            <label>Repository Name</label>
-            <input type="text" id="ghRepo" placeholder="e.g. Download-Hub" />
-          </div>
-          <div class="form-field">
-            <label>Branch</label>
-            <input type="text" id="ghBranch" placeholder="main" />
-          </div>
-          <div class="form-field">
-            <label>cards.json path in repo</label>
-            <input type="text" id="ghPath" placeholder="cards.json" />
+          <div class="form-field"><label>Supabase Project URL</label><input type="text" id="sbUrl" placeholder="https://xxxx.supabase.co" /></div>
+          <div class="form-field"><label>Supabase Anon Key (public)</label><input type="text" id="sbKey" placeholder="eyJ…" /></div>
+        </div>
+        <button class="btn-accent" id="saveSB">Save Supabase Settings</button>
+        <div class="settings-status" id="sbStatus"></div>
+      </div>
+    </div>
+
+    <!-- ===== ANNOUNCEMENT BANNER ===== -->
+    <div class="settings-panel">
+      <div class="settings-header" data-target="bannerBody">
+        <h3>📢 Announcement Banner</h3><span class="arrow">▼</span>
+      </div>
+      <div class="settings-body" id="bannerBody">
+        <div class="settings-grid">
+          <div class="form-field" style="grid-column:1/-1">
+            <div class="toggle-row">
+              <label style="color:var(--text);font-size:0.9rem;font-weight:600">Show banner on site</label>
+              <label class="toggle"><input type="checkbox" id="bannerEnabled"><span class="toggle-slider"></span></label>
+            </div>
           </div>
           <div class="form-field" style="grid-column:1/-1">
-            <label>Personal Access Token</label>
-            <input type="password" id="ghToken" placeholder="github_pat_…" autocomplete="off" />
+            <label>Message</label>
+            <input type="text" id="bannerMsg" placeholder="e.g. 🎉 v2.0 just dropped! Check out the new downloads." />
+          </div>
+          <div class="form-field">
+            <label>Color</label>
+            <select id="bannerColor">
+              <option value="blue">Blue (default)</option>
+              <option value="accent">Orange</option>
+              <option value="green">Green</option>
+              <option value="red">Red</option>
+            </select>
           </div>
         </div>
-        <button class="btn-accent" id="saveSettings">Save Settings</button>
-        <div class="settings-status" id="settingsStatus"></div>
-
-        <!-- Change password -->
-        <div class="change-pw">
-          <h4>🔑 Change Admin Password</h4>
-          <div class="pw-row">
-            <div class="form-field">
-              <label>New Password</label>
-              <input type="password" id="newPw1" placeholder="New password" />
-            </div>
-            <div class="form-field">
-              <label>Confirm Password</label>
-              <input type="password" id="newPw2" placeholder="Confirm password" />
-            </div>
-            <button class="btn-sm" id="changePwBtn" style="margin-bottom:0;height:38px">Update</button>
-          </div>
-          <div class="settings-status" id="pwStatus"></div>
+        <div id="bannerPreview" class="banner-preview blue" style="margin-top:0.5rem"></div>
+        <div style="margin-top:1rem">
+          <button class="btn-accent" id="saveBanner">Save Banner</button>
         </div>
+        <div class="settings-status" id="bannerStatus"></div>
       </div>
     </div>
 
-    <!-- Add/Edit Form -->
-    <div id="formPanel">
-      <h3 id="formTitle">➕ Add New Download Card</h3>
+    <!-- ===== CARD FORM ===== -->
+    <div id="cardFormPanel">
+      <h3 id="cardFormTitle">➕ Add New Download Card</h3>
       <div class="form-grid">
-        <div class="form-field">
-          <label>Name *</label>
-          <input type="text" id="fName" placeholder="e.g. CoolClient 3.0" />
-        </div>
-        <div class="form-field">
-          <label>Version *</label>
-          <input type="text" id="fVersion" placeholder="e.g. 3.0" />
-        </div>
-        <div class="form-field">
-          <label>Tag (label shown on card)</label>
-          <select id="fTag">
-            <option value="CLIENT">CLIENT</option>
-            <option value="HTML">HTML</option>
-            <option value="ZIP">ZIP</option>
-            <option value="TOOL">TOOL</option>
-            <option value="OTHER">OTHER</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label>File Type</label>
-          <select id="fFileType">
-            <option value="ZIP">ZIP</option>
-            <option value="HTML">HTML</option>
-            <option value="EXE">EXE</option>
-            <option value="OTHER">OTHER</option>
-          </select>
-        </div>
-        <div class="form-field full">
-          <label>Asset filename (the actual file in your repo) *</label>
-          <input type="text" id="fAsset" placeholder="e.g. CoolClient.zip or some file.html" />
-        </div>
-        <div class="form-field full">
-          <label>Description</label>
-          <textarea id="fDesc" placeholder="Short description of this download..."></textarea>
-        </div>
-        <div class="form-field full">
-          <div class="checkbox-field">
-            <input type="checkbox" id="fIsNew" />
-            <label for="fIsNew">Show "NEW" badge on this card</label>
-          </div>
-        </div>
+        <div class="form-field"><label>Name *</label><input type="text" id="fName" placeholder="e.g. CoolClient 3.0" /></div>
+        <div class="form-field"><label>Version *</label><input type="text" id="fVersion" placeholder="e.g. 3.0" /></div>
+        <div class="form-field"><label>Tag</label><select id="fTag"><option value="CLIENT">CLIENT</option><option value="HTML">HTML</option><option value="ZIP">ZIP</option><option value="TOOL">TOOL</option><option value="OTHER">OTHER</option></select></div>
+        <div class="form-field"><label>File Type</label><select id="fFileType"><option value="ZIP">ZIP</option><option value="HTML">HTML</option><option value="EXE">EXE</option><option value="OTHER">OTHER</option></select></div>
+        <div class="form-field full"><label>Asset filename (exact filename in your repo) *</label><input type="text" id="fAsset" placeholder="e.g. CoolClient.zip" /></div>
+        <div class="form-field full"><label>Description</label><textarea id="fDesc" placeholder="Short description..."></textarea></div>
+        <div class="form-field full"><div class="checkbox-field"><input type="checkbox" id="fIsNew"><label for="fIsNew">Show "NEW" badge</label></div></div>
       </div>
       <div class="form-actions">
-        <button class="btn-primary" id="saveCardBtn" style="max-width:180px">Save Card</button>
-        <button class="btn-sm" id="cancelFormBtn">Cancel</button>
+        <button class="btn-accent" id="saveCardBtn" style="padding:0.7rem 1.5rem">Save Card</button>
+        <button class="btn-sm" id="cancelCardBtn">Cancel</button>
       </div>
     </div>
 
-    <!-- Cards list -->
+    <!-- ===== CARDS LIST ===== -->
     <div class="section-header">
       <div style="display:flex;align-items:center;gap:0.75rem">
         <h2>Download Cards</h2>
@@ -579,380 +298,433 @@ body { background: var(--bg); color: var(--text); min-height: 100vh; }
       </div>
       <button class="btn-accent" id="addCardBtn">+ Add Card</button>
     </div>
-
     <div class="cards-list" id="adminCardsList">
-      <div class="empty-state">
-        <div style="font-size:2rem">📭</div>
-        <p>No cards loaded yet. Check your GitHub settings.</p>
+      <div class="empty-state"><div>📭</div><p>No cards yet. Load from GitHub or add manually.</p></div>
+    </div>
+
+    <!-- ===== CHANGELOG ===== -->
+    <hr class="divider" style="margin:2rem 0">
+    <div class="section-header">
+      <div style="display:flex;align-items:center;gap:0.75rem">
+        <h2>Changelog Entries</h2>
+        <span class="card-count" id="clCount">0 entries</span>
       </div>
+      <button class="btn-accent" id="addClBtn">+ Add Entry</button>
+    </div>
+
+    <div id="clFormPanel" style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:1.25rem;display:none;animation:fadeUp 0.25s ease;">
+      <h3 id="clFormTitle" style="font-size:1rem;margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);">➕ Add Changelog Entry</h3>
+      <div class="form-grid">
+        <div class="form-field"><label>Date *</label><input type="date" id="clDate" /></div>
+        <div class="form-field"><label>Version *</label><input type="text" id="clVersion" placeholder="e.g. v2.0" /></div>
+        <div class="form-field full"><label>Title *</label><input type="text" id="clTitle" placeholder="e.g. Major Update" /></div>
+        <div class="form-field full"><label>Items (one per line)</label><textarea id="clItems" style="min-height:100px" placeholder="Added ratings system&#10;Added download counters&#10;Added changelog page"></textarea></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-accent" id="saveClBtn" style="padding:0.7rem 1.5rem">Save Entry</button>
+        <button class="btn-sm" id="cancelClBtn">Cancel</button>
+      </div>
+    </div>
+
+    <div id="clList">
+      <div class="empty-state"><div>📋</div><p>No changelog entries yet.</p></div>
     </div>
 
   </div><!-- /main-content -->
 
-  <!-- Save bar -->
   <div id="saveBar">
-    <span class="save-msg">⚠️ You have unsaved changes</span>
-    <div class="save-actions">
+    <span class="save-msg">⚠️ You have unsaved changes — publish to go live</span>
+    <div style="display:flex;gap:0.75rem">
       <button class="btn-sm" id="discardBtn">Discard</button>
       <button class="btn-accent" id="publishBtn">🚀 Publish to GitHub</button>
     </div>
   </div>
-
-</div><!-- /adminPanel -->
+</div>
 
 <script>
-// ===== DEFAULT PASSWORD HASH =====
-// Default password is: DownloadHub2026
-// SHA-256 hash stored in localStorage under 'dh_pw_hash'
-// If not set, use the default below
-const DEFAULT_PW_HASH = '3d9a5c2e8b1f4a7d0e6c9f2a5b8d1e4a7c0f3b6e9d2a5c8f1b4e7a0d3c6f9b2';
-
-// We'll compute real hash dynamically, this is just fallback
+// ===== AUTH =====
 async function sha256(str) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
   return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
 }
-
-// ===== STATE =====
-let cards = [];
-let dirty = false;
-let editingId = null;
-
-// ===== LOGIN =====
-async function initLogin() {
-  // Set default hash if not already set
-  if (!localStorage.getItem('dh_pw_hash')) {
-    const hash = await sha256('DownloadHub2026');
-    localStorage.setItem('dh_pw_hash', hash);
-  }
+async function initDefaultPw() {
+  if (!localStorage.getItem('dh_pw_hash'))
+    localStorage.setItem('dh_pw_hash', await sha256('DownloadHub2026'));
 }
-initLogin();
+initDefaultPw();
 
-const loginBtn  = document.getElementById('loginBtn');
-const pwInput   = document.getElementById('passwordInput');
-const loginErr  = document.getElementById('loginError');
+document.getElementById('loginBtn').addEventListener('click', attemptLogin);
+document.getElementById('passwordInput').addEventListener('keydown', e => { if(e.key==='Enter') attemptLogin(); });
 
 async function attemptLogin() {
-  const pw = pwInput.value;
-  if (!pw) return;
-  loginBtn.disabled = true;
-  loginBtn.textContent = 'Checking…';
+  const pw = document.getElementById('passwordInput').value;
+  if(!pw) return;
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = 'Checking…';
   const hash = await sha256(pw);
-  const stored = localStorage.getItem('dh_pw_hash');
-  if (hash === stored) {
+  if(hash === localStorage.getItem('dh_pw_hash')) {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('adminPanel').style.display = 'block';
-    loadSettingsFromStorage();
-    loadCardsFromGitHub();
+    loadAllSettings();
+    loadFromGitHub();
   } else {
-    loginErr.style.display = 'block';
-    pwInput.classList.add('error');
-    setTimeout(() => pwInput.classList.remove('error'), 500);
+    document.getElementById('loginError').style.display = 'block';
+    const inp = document.getElementById('passwordInput');
+    inp.classList.add('error'); setTimeout(()=>inp.classList.remove('error'),400);
   }
-  loginBtn.disabled = false;
-  loginBtn.textContent = 'Sign In';
-  pwInput.value = '';
+  btn.disabled = false; btn.textContent = 'Sign In';
+  document.getElementById('passwordInput').value = '';
 }
 
-loginBtn.addEventListener('click', attemptLogin);
-pwInput.addEventListener('keydown', e => { if (e.key === 'Enter') attemptLogin(); });
-
-// ===== LOGOUT =====
 document.getElementById('logoutBtn').addEventListener('click', () => {
   document.getElementById('adminPanel').style.display = 'none';
   document.getElementById('loginScreen').style.display = 'flex';
-  cards = []; dirty = false;
+  cards = []; changelog = []; dirty = false;
 });
 
+// ===== STATE =====
+let cards = [], changelog = [], siteConfig = { banner:{enabled:false,message:'',color:'blue'}, supabase:{url:'',anonKey:''} };
+let dirty = false, editingCardIdx = null, editingClIdx = null;
+
 // ===== SETTINGS =====
-function loadSettingsFromStorage() {
+function loadAllSettings() {
   document.getElementById('ghOwner').value  = localStorage.getItem('dh_owner')  || 'GreenGrunblocked';
   document.getElementById('ghRepo').value   = localStorage.getItem('dh_repo')   || 'Download-Hub';
   document.getElementById('ghBranch').value = localStorage.getItem('dh_branch') || 'main';
-  document.getElementById('ghPath').value   = localStorage.getItem('dh_path')   || 'cards.json';
   document.getElementById('ghToken').value  = localStorage.getItem('dh_token')  || '';
+  document.getElementById('sbUrl').value    = localStorage.getItem('dh_sb_url') || '';
+  document.getElementById('sbKey').value    = localStorage.getItem('dh_sb_key') || '';
 }
 
-document.getElementById('saveSettings').addEventListener('click', () => {
+document.getElementById('saveGH').addEventListener('click', () => {
   localStorage.setItem('dh_owner',  document.getElementById('ghOwner').value.trim());
   localStorage.setItem('dh_repo',   document.getElementById('ghRepo').value.trim());
   localStorage.setItem('dh_branch', document.getElementById('ghBranch').value.trim() || 'main');
-  localStorage.setItem('dh_path',   document.getElementById('ghPath').value.trim() || 'cards.json');
   localStorage.setItem('dh_token',  document.getElementById('ghToken').value.trim());
-  const st = document.getElementById('settingsStatus');
-  st.textContent = '✅ Settings saved!';
-  st.className = 'settings-status ok';
-  setTimeout(() => { st.textContent = ''; st.className = 'settings-status'; }, 3000);
-  // Reload cards with new settings
-  loadCardsFromGitHub();
+  setStatus('ghStatus', '✅ GitHub settings saved!', 'ok');
+  loadFromGitHub();
 });
 
-// Settings accordion
-document.getElementById('settingsToggle').addEventListener('click', () => {
-  const body  = document.getElementById('settingsBody');
-  const arrow = document.getElementById('settingsArrow');
-  const open  = body.classList.toggle('open');
-  arrow.textContent = open ? '▲' : '▼';
+document.getElementById('saveSB').addEventListener('click', () => {
+  const url = document.getElementById('sbUrl').value.trim();
+  const key = document.getElementById('sbKey').value.trim();
+  localStorage.setItem('dh_sb_url', url);
+  localStorage.setItem('dh_sb_key', key);
+  siteConfig.supabase = { url, anonKey: key };
+  markDirty();
+  setStatus('sbStatus', '✅ Supabase settings saved! Publish to apply.', 'ok');
 });
 
-// Change password
 document.getElementById('changePwBtn').addEventListener('click', async () => {
   const p1 = document.getElementById('newPw1').value;
   const p2 = document.getElementById('newPw2').value;
-  const st = document.getElementById('pwStatus');
-  if (!p1) { st.textContent = 'Enter a new password.'; st.className = 'settings-status error'; return; }
-  if (p1 !== p2) { st.textContent = 'Passwords do not match.'; st.className = 'settings-status error'; return; }
-  const hash = await sha256(p1);
-  localStorage.setItem('dh_pw_hash', hash);
-  document.getElementById('newPw1').value = '';
-  document.getElementById('newPw2').value = '';
-  st.textContent = '✅ Password updated!';
-  st.className = 'settings-status ok';
-  setTimeout(() => { st.textContent = ''; st.className = 'settings-status'; }, 3000);
+  if(!p1) { setStatus('pwStatus','Enter a new password.','error'); return; }
+  if(p1!==p2) { setStatus('pwStatus','Passwords do not match.','error'); return; }
+  localStorage.setItem('dh_pw_hash', await sha256(p1));
+  document.getElementById('newPw1').value = document.getElementById('newPw2').value = '';
+  setStatus('pwStatus','✅ Password updated!','ok');
+});
+
+// ===== ACCORDIONS =====
+document.querySelectorAll('.settings-header').forEach(h => {
+  h.addEventListener('click', () => {
+    const body = document.getElementById(h.dataset.target);
+    const arrow = h.querySelector('.arrow');
+    const open = body.classList.toggle('open');
+    if(arrow) arrow.textContent = open ? '▲' : '▼';
+  });
+});
+
+// ===== BANNER =====
+function updateBannerPreview() {
+  const msg = document.getElementById('bannerMsg').value || 'Banner preview';
+  const color = document.getElementById('bannerColor').value;
+  const prev = document.getElementById('bannerPreview');
+  prev.className = 'banner-preview ' + color;
+  prev.textContent = msg;
+}
+document.getElementById('bannerMsg').addEventListener('input', updateBannerPreview);
+document.getElementById('bannerColor').addEventListener('change', updateBannerPreview);
+
+document.getElementById('saveBanner').addEventListener('click', () => {
+  siteConfig.banner = {
+    enabled: document.getElementById('bannerEnabled').checked,
+    message: document.getElementById('bannerMsg').value.trim(),
+    color:   document.getElementById('bannerColor').value
+  };
+  markDirty();
+  setStatus('bannerStatus', '✅ Banner saved! Publish to apply.', 'ok');
 });
 
 // ===== GITHUB API =====
-function getGHSettings() {
+function getGH() {
   return {
     owner:  localStorage.getItem('dh_owner')  || '',
     repo:   localStorage.getItem('dh_repo')   || '',
     branch: localStorage.getItem('dh_branch') || 'main',
-    path:   localStorage.getItem('dh_path')   || 'cards.json',
     token:  localStorage.getItem('dh_token')  || ''
   };
 }
 
-async function loadCardsFromGitHub() {
-  const { owner, repo, branch, path, token } = getGHSettings();
-  if (!owner || !repo || !token) {
-    showAdminToast('⚙️ Enter GitHub settings above to load cards', 4000);
-    return;
-  }
-  showLoading('Loading cards from GitHub…');
-  try {
-    const res = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`,
-      { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' } }
-    );
-    if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
-    const data = await res.json();
-    cards = JSON.parse(atob(data.content.replace(/\n/g, '')));
-    renderAdminCards();
-    showAdminToast('✅ Cards loaded from GitHub');
-  } catch (e) {
-    showAdminToast('❌ Failed to load cards: ' + e.message, 5000);
-  } finally {
-    hideLoading();
-  }
+async function ghFetch(path, method='GET', body=null) {
+  const { owner, repo, branch, token } = getGH();
+  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
+  const opts = { method, headers: { Authorization:`Bearer ${token}`, Accept:'application/vnd.github+json', 'Content-Type':'application/json' } };
+  if(body) opts.body = JSON.stringify(body);
+  return fetch(method==='GET' ? url : `https://api.github.com/repos/${owner}/${repo}/contents/${path}`, opts);
 }
 
-async function publishToGitHub() {
-  const { owner, repo, branch, path, token } = getGHSettings();
-  if (!owner || !repo || !token) {
-    showAdminToast('⚙️ Fill in GitHub settings first', 4000);
-    return;
-  }
+async function getFileSha(path) {
+  const res = await ghFetch(path);
+  if(!res.ok) return null;
+  return (await res.json()).sha;
+}
+
+async function commitFile(path, content, msg) {
+  const sha = await getFileSha(path);
+  const body = { message:`admin: ${msg}`, content: btoa(unescape(encodeURIComponent(content))), branch: getGH().branch };
+  if(sha) body.sha = sha;
+  const res = await ghFetch(path, 'PUT', body);
+  if(!res.ok) { const e = await res.json(); throw new Error(e.message||res.status); }
+}
+
+async function loadFromGitHub() {
+  const { owner, repo, branch, token } = getGH();
+  if(!owner || !repo || !token) { toast('⚙️ Enter GitHub settings to load data', 4000); return; }
+  showLoading('Loading from GitHub…');
+  try {
+    // Load all 3 files in parallel
+    const [cardsRes, configRes, clRes] = await Promise.all([
+      ghFetch('cards.json').catch(()=>null),
+      ghFetch('config.json').catch(()=>null),
+      ghFetch('changelog.json').catch(()=>null)
+    ]);
+    if(cardsRes?.ok) cards = JSON.parse(atob((await cardsRes.json()).content.replace(/\n/g,'')));
+    if(configRes?.ok) {
+      siteConfig = JSON.parse(atob((await configRes.json()).content.replace(/\n/g,'')));
+      loadBannerIntoUI();
+      loadSBIntoUI();
+    }
+    if(clRes?.ok) changelog = JSON.parse(atob((await clRes.json()).content.replace(/\n/g,'')));
+    renderCardsList();
+    renderClList();
+    toast('✅ Loaded from GitHub');
+  } catch(e) { toast('❌ Load failed: '+e.message, 5000); }
+  finally { hideLoading(); }
+}
+
+function loadBannerIntoUI() {
+  const b = siteConfig.banner || {};
+  document.getElementById('bannerEnabled').checked = !!b.enabled;
+  document.getElementById('bannerMsg').value = b.message || '';
+  document.getElementById('bannerColor').value = b.color || 'blue';
+  updateBannerPreview();
+}
+function loadSBIntoUI() {
+  const sb = siteConfig.supabase || {};
+  if(sb.url) { document.getElementById('sbUrl').value = sb.url; localStorage.setItem('dh_sb_url', sb.url); }
+  if(sb.anonKey) { document.getElementById('sbKey').value = sb.anonKey; localStorage.setItem('dh_sb_key', sb.anonKey); }
+}
+
+// ===== PUBLISH =====
+document.getElementById('publishBtn').addEventListener('click', publishAll);
+document.getElementById('discardBtn').addEventListener('click', () => {
+  if(!confirm('Discard all unsaved changes and reload from GitHub?')) return;
+  dirty = false; hideSaveBar(); loadFromGitHub();
+});
+
+async function publishAll() {
   showLoading('Publishing to GitHub…');
   try {
-    // Get current file SHA (required for update)
-    const getRes = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/contents/${path}?ref=${branch}`,
-      { headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json' } }
-    );
-    let sha = null;
-    if (getRes.ok) {
-      const fileData = await getRes.json();
-      sha = fileData.sha;
-    }
-
-    // Encode new content
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(cards, null, 2))));
-
-    const body = {
-      message: `admin: update cards.json (${cards.length} cards)`,
-      content,
-      branch
-    };
-    if (sha) body.sha = sha;
-
-    const putRes = await fetch(
-      `https://api.github.com/repos/${owner}/${repo}/contents/${path}`,
-      {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/vnd.github+json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body)
-      }
-    );
-    if (!putRes.ok) {
-      const err = await putRes.json();
-      throw new Error(err.message || putRes.status);
-    }
-    dirty = false;
-    hideSaveBar();
-    showAdminToast('🚀 Published! GitHub Pages will update in ~30 seconds.');
-  } catch (e) {
-    showAdminToast('❌ Publish failed: ' + e.message, 6000);
-  } finally {
-    hideLoading();
-  }
+    await commitFile('cards.json', JSON.stringify(cards, null, 2), 'update cards.json');
+    await commitFile('config.json', JSON.stringify(siteConfig, null, 2), 'update config.json');
+    await commitFile('changelog.json', JSON.stringify(changelog, null, 2), 'update changelog.json');
+    dirty = false; hideSaveBar();
+    toast('🚀 Published! Site will update in ~30 seconds.');
+  } catch(e) { toast('❌ Publish failed: '+e.message, 6000); }
+  finally { hideLoading(); }
 }
 
-// ===== RENDER CARDS =====
-function renderAdminCards() {
+// ===== CARDS =====
+function renderCardsList() {
   const list = document.getElementById('adminCardsList');
-  document.getElementById('cardCount').textContent = cards.length + ' card' + (cards.length !== 1 ? 's' : '');
-
-  if (cards.length === 0) {
-    list.innerHTML = `<div class="empty-state"><div style="font-size:2rem">📭</div><p>No cards yet. Click "+ Add Card" to get started.</p></div>`;
-    return;
-  }
-
-  list.innerHTML = cards.map((card, i) => `
-    <div class="admin-card" data-id="${card.id}">
+  document.getElementById('cardCount').textContent = cards.length + ' card' + (cards.length!==1?'s':'');
+  if(!cards.length) { list.innerHTML = '<div class="empty-state"><div>📭</div><p>No cards yet.</p></div>'; return; }
+  list.innerHTML = cards.map((c,i) => `
+    <div class="admin-card" draggable="true" data-index="${i}">
+      <span class="drag-handle" title="Drag to reorder">⠿</span>
       <div class="admin-card-info">
-        <h4>
-          <span class="admin-card-tag">${escHtml(card.tag)}</span>
-          ${escHtml(card.name)}
-          ${card.isNew ? '<span class="new-badge">NEW</span>' : ''}
-        </h4>
-        <div class="admin-card-meta">v${escHtml(card.version)} &bull; ${escHtml(card.fileType)} &bull; ${escHtml(card.asset)}</div>
+        <h4><span class="admin-card-tag">${esc(c.tag)}</span>${esc(c.name)}${c.isNew?'<span class="new-badge" style="margin-left:0.4rem">NEW</span>':''}</h4>
+        <div class="admin-card-meta">v${esc(c.version)} &bull; ${esc(c.fileType)} &bull; ${esc(c.asset)}</div>
       </div>
       <div class="admin-card-actions">
-        <button class="btn-edit" onclick="startEdit(${i})">✏️ Edit</button>
-        <button class="btn-danger" onclick="deleteCard(${i})">🗑 Delete</button>
+        <button class="btn-edit" onclick="editCard(${i})">✏️ Edit</button>
+        <button class="btn-danger" onclick="deleteCard(${i})">🗑</button>
       </div>
     </div>
   `).join('');
+  initDragAndDrop();
 }
 
-// ===== ADD / EDIT FORM =====
+// Drag and drop reorder
+let dragSrc = null;
+function initDragAndDrop() {
+  document.querySelectorAll('#adminCardsList .admin-card').forEach((el, i) => {
+    el.addEventListener('dragstart', e => {
+      dragSrc = i;
+      setTimeout(() => el.classList.add('dragging'), 0);
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    el.addEventListener('dragend', () => {
+      el.classList.remove('dragging');
+      document.querySelectorAll('.admin-card').forEach(c => c.classList.remove('drag-over'));
+    });
+    el.addEventListener('dragover', e => {
+      e.preventDefault();
+      document.querySelectorAll('.admin-card').forEach(c => c.classList.remove('drag-over'));
+      el.classList.add('drag-over');
+    });
+    el.addEventListener('drop', e => {
+      e.preventDefault();
+      if(dragSrc === null || dragSrc === i) return;
+      const [moved] = cards.splice(dragSrc, 1);
+      cards.splice(i, 0, moved);
+      renderCardsList();
+      markDirty();
+      dragSrc = null;
+    });
+  });
+}
+
+// Add card
 document.getElementById('addCardBtn').addEventListener('click', () => {
-  editingId = null;
-  clearForm();
-  document.getElementById('formTitle').textContent = '➕ Add New Download Card';
+  editingCardIdx = null;
+  clearCardForm();
+  document.getElementById('cardFormTitle').textContent = '➕ Add New Download Card';
   document.getElementById('saveCardBtn').textContent = 'Add Card';
-  document.getElementById('formPanel').style.display = 'block';
+  document.getElementById('cardFormPanel').style.display = 'block';
+  document.getElementById('cardFormPanel').scrollIntoView({behavior:'smooth',block:'start'});
   document.getElementById('fName').focus();
-  document.getElementById('formPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
+document.getElementById('cancelCardBtn').addEventListener('click', () => { document.getElementById('cardFormPanel').style.display='none'; clearCardForm(); editingCardIdx=null; });
 
-document.getElementById('cancelFormBtn').addEventListener('click', () => {
-  document.getElementById('formPanel').style.display = 'none';
-  editingId = null;
-  clearForm();
-});
-
-function clearForm() {
-  ['fName','fVersion','fAsset','fDesc'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('fTag').value = 'CLIENT';
-  document.getElementById('fFileType').value = 'ZIP';
-  document.getElementById('fIsNew').checked = false;
+function clearCardForm() {
+  ['fName','fVersion','fAsset','fDesc'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('fTag').value='CLIENT';
+  document.getElementById('fFileType').value='ZIP';
+  document.getElementById('fIsNew').checked=false;
 }
 
-function startEdit(index) {
-  const card = cards[index];
-  editingId = index;
-  document.getElementById('fName').value    = card.name;
-  document.getElementById('fVersion').value = card.version;
-  document.getElementById('fTag').value     = card.tag;
-  document.getElementById('fFileType').value= card.fileType;
-  document.getElementById('fAsset').value   = card.asset;
-  document.getElementById('fDesc').value    = card.description;
-  document.getElementById('fIsNew').checked = !!card.isNew;
-  document.getElementById('formTitle').textContent = '✏️ Edit: ' + card.name;
+function editCard(i) {
+  const c = cards[i]; editingCardIdx = i;
+  document.getElementById('fName').value    = c.name;
+  document.getElementById('fVersion').value = c.version;
+  document.getElementById('fTag').value     = c.tag;
+  document.getElementById('fFileType').value= c.fileType;
+  document.getElementById('fAsset').value   = c.asset;
+  document.getElementById('fDesc').value    = c.description;
+  document.getElementById('fIsNew').checked = !!c.isNew;
+  document.getElementById('cardFormTitle').textContent = '✏️ Edit: '+c.name;
   document.getElementById('saveCardBtn').textContent = 'Save Changes';
-  document.getElementById('formPanel').style.display = 'block';
-  document.getElementById('formPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('cardFormPanel').style.display='block';
+  document.getElementById('cardFormPanel').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 document.getElementById('saveCardBtn').addEventListener('click', () => {
-  const name    = document.getElementById('fName').value.trim();
-  const version = document.getElementById('fVersion').value.trim();
-  const asset   = document.getElementById('fAsset').value.trim();
-  if (!name || !version || !asset) {
-    showAdminToast('❌ Name, Version, and Asset are required');
-    return;
-  }
-
-  const cardData = {
-    id:          name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''),
-    tag:         document.getElementById('fTag').value,
-    name,
-    version,
-    fileType:    document.getElementById('fFileType').value,
-    description: document.getElementById('fDesc').value.trim(),
-    asset,
-    isNew:       document.getElementById('fIsNew').checked || undefined
-  };
-  if (!cardData.isNew) delete cardData.isNew;
-
-  if (editingId !== null) {
-    cards[editingId] = cardData;
-    showAdminToast('✅ Card updated — publish to go live');
-  } else {
-    cards.push(cardData);
-    showAdminToast('✅ Card added — publish to go live');
-  }
-
-  renderAdminCards();
-  markDirty();
-  document.getElementById('formPanel').style.display = 'none';
-  clearForm();
-  editingId = null;
+  const name = document.getElementById('fName').value.trim();
+  const ver  = document.getElementById('fVersion').value.trim();
+  const asset= document.getElementById('fAsset').value.trim();
+  if(!name||!ver||!asset) { toast('❌ Name, Version, and Asset are required'); return; }
+  const card = { id: name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''), tag:document.getElementById('fTag').value, name, version:ver, fileType:document.getElementById('fFileType').value, description:document.getElementById('fDesc').value.trim(), asset };
+  if(document.getElementById('fIsNew').checked) card.isNew = true;
+  if(editingCardIdx!==null) { cards[editingCardIdx]=card; toast('✅ Card updated'); }
+  else { cards.push(card); toast('✅ Card added'); }
+  renderCardsList(); markDirty();
+  document.getElementById('cardFormPanel').style.display='none'; clearCardForm(); editingCardIdx=null;
 });
 
-function deleteCard(index) {
-  const name = cards[index].name;
-  if (!confirm(`Delete "${name}"? This can't be undone until you publish.`)) return;
-  cards.splice(index, 1);
-  renderAdminCards();
-  markDirty();
-  showAdminToast(`🗑 "${name}" removed — publish to go live`);
+function deleteCard(i) {
+  if(!confirm(`Delete "${cards[i].name}"?`)) return;
+  const name = cards[i].name;
+  cards.splice(i,1); renderCardsList(); markDirty(); toast(`🗑 "${name}" deleted`);
 }
 
-// ===== DIRTY STATE / SAVE BAR =====
-function markDirty() {
-  dirty = true;
-  document.getElementById('saveBar').classList.add('visible');
-}
-function hideSaveBar() {
-  document.getElementById('saveBar').classList.remove('visible');
+// ===== CHANGELOG =====
+function renderClList() {
+  const list = document.getElementById('clList');
+  document.getElementById('clCount').textContent = changelog.length + ' entr' + (changelog.length===1?'y':'ies');
+  if(!changelog.length) { list.innerHTML='<div class="empty-state"><div>📋</div><p>No entries yet.</p></div>'; return; }
+  const sorted = [...changelog].map((e,i)=>({...e,_i:i})).sort((a,b)=>new Date(b.date)-new Date(a.date));
+  list.innerHTML = sorted.map(e => {
+    const d = new Date(e.date+'T12:00:00').toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
+    return `<div class="cl-entry"><div class="cl-entry-info"><h4><span class="cl-version">${esc(e.version)}</span>${esc(e.title)}</h4><p>${esc(d)} &bull; ${e.items.length} item${e.items.length!==1?'s':''}</p></div><div style="display:flex;gap:0.4rem;flex-shrink:0"><button class="btn-edit" onclick="editCl(${e._i})">✏️</button><button class="btn-danger" onclick="deleteCl(${e._i})">🗑</button></div></div>`;
+  }).join('');
 }
 
-document.getElementById('publishBtn').addEventListener('click', publishToGitHub);
-document.getElementById('discardBtn').addEventListener('click', () => {
-  if (!confirm('Discard all unsaved changes and reload from GitHub?')) return;
-  dirty = false;
-  hideSaveBar();
-  loadCardsFromGitHub();
+document.getElementById('addClBtn').addEventListener('click', () => {
+  editingClIdx = null;
+  clearClForm();
+  document.getElementById('clDate').value = new Date().toISOString().split('T')[0];
+  document.getElementById('clFormTitle').textContent = '➕ Add Changelog Entry';
+  document.getElementById('saveClBtn').textContent = 'Add Entry';
+  document.getElementById('clFormPanel').style.display='block';
+  document.getElementById('clFormPanel').scrollIntoView({behavior:'smooth',block:'start'});
+});
+document.getElementById('cancelClBtn').addEventListener('click', () => { document.getElementById('clFormPanel').style.display='none'; clearClForm(); editingClIdx=null; });
+
+function clearClForm() {
+  ['clDate','clVersion','clTitle','clItems'].forEach(id=>document.getElementById(id).value='');
+}
+
+function editCl(i) {
+  const e = changelog[i]; editingClIdx = i;
+  document.getElementById('clDate').value    = e.date;
+  document.getElementById('clVersion').value = e.version;
+  document.getElementById('clTitle').value   = e.title;
+  document.getElementById('clItems').value   = e.items.join('\n');
+  document.getElementById('clFormTitle').textContent = '✏️ Edit Entry';
+  document.getElementById('saveClBtn').textContent = 'Save Changes';
+  document.getElementById('clFormPanel').style.display='block';
+  document.getElementById('clFormPanel').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+document.getElementById('saveClBtn').addEventListener('click', () => {
+  const date    = document.getElementById('clDate').value;
+  const version = document.getElementById('clVersion').value.trim();
+  const title   = document.getElementById('clTitle').value.trim();
+  const items   = document.getElementById('clItems').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  if(!date||!version||!title) { toast('❌ Date, Version, and Title are required'); return; }
+  const entry = { id:'cl-'+Date.now(), date, version, title, items };
+  if(editingClIdx!==null) { changelog[editingClIdx]=entry; toast('✅ Entry updated'); }
+  else { changelog.push(entry); toast('✅ Entry added'); }
+  renderClList(); markDirty();
+  document.getElementById('clFormPanel').style.display='none'; clearClForm(); editingClIdx=null;
 });
 
-// ===== LOADING OVERLAY =====
-function showLoading(msg) {
-  document.getElementById('loadingMsg').textContent = msg || 'Loading…';
-  document.getElementById('loadingOverlay').classList.add('show');
-}
-function hideLoading() {
-  document.getElementById('loadingOverlay').classList.remove('show');
+function deleteCl(i) {
+  if(!confirm('Delete this changelog entry?')) return;
+  changelog.splice(i,1); renderClList(); markDirty(); toast('🗑 Entry deleted');
 }
 
-// ===== TOAST =====
-const adminToast = document.getElementById('adminToast');
-let toastTimer;
-function showAdminToast(msg, duration = 3500) {
-  adminToast.textContent = msg;
-  adminToast.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => adminToast.classList.remove('show'), duration);
+// ===== DIRTY STATE =====
+function markDirty() { dirty=true; document.getElementById('saveBar').classList.add('visible'); }
+function hideSaveBar() { document.getElementById('saveBar').classList.remove('visible'); }
+
+// ===== HELPERS =====
+function setStatus(id, msg, cls) {
+  const el = document.getElementById(id);
+  el.textContent = msg; el.className = 'settings-status'+(cls?' '+cls:'');
+  setTimeout(()=>{el.textContent='';el.className='settings-status';},3500);
 }
 
-function escHtml(str) {
-  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function showLoading(msg) { document.getElementById('loadingMsg').textContent=msg||'Loading…'; document.getElementById('loadingOverlay').classList.add('show'); }
+function hideLoading() { document.getElementById('loadingOverlay').classList.remove('show'); }
+
+const toastEl = document.getElementById('adminToast');
+let toastT;
+function toast(msg, dur=3500) { toastEl.textContent=msg; toastEl.classList.add('show'); clearTimeout(toastT); toastT=setTimeout(()=>toastEl.classList.remove('show'),dur); }
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 </script>
 </body>
 </html>
