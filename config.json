@@ -1,8 +1,8 @@
 {
   "banner": {
     "enabled": false,
-    "message": "Ã°ÂÂÂ Welcome to Download Hub!",
-    "color": "blue"
+    "message": "Welcome to Download Hub!",
+    "color": "green"
   },
   "supabase": {
     "url": "https://qhnhtjubjsgncaphmflv.supabase.co",
