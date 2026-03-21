@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Changelog — Download Hub</title>
+<link rel="icon" type="image/png" sizes="64x64" href="logo.png">
+<style>
+:root { --bg:#0f1115; --card:#161a22; --accent:#ff9f1c; --text:#f5f6fa; --muted:#b2b6c2; --button:#5865F2; --border:#1f2a3d; }
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,system-ui,sans-serif;}
+body{background:#0f1115;color:var(--text);min-height:100vh;padding:2.5rem;position:relative;overflow-x:hidden;}
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none;}
+.container{position:relative;z-index:1;max-width:720px;margin:0 auto;}
+.back-link{display:inline-flex;align-items:center;gap:0.5rem;color:var(--muted);text-decoration:none;font-size:0.88rem;margin-bottom:1.5rem;transition:color 0.2s;}
+.back-link:hover{color:var(--text);}
+.page-header{margin-bottom:3rem;}
+.page-header h1{font-size:clamp(1.8rem,4vw,2.5rem);margin-bottom:0.4rem;}
+.page-header p{color:var(--muted);font-size:0.95rem;}
+.timeline{position:relative;padding-left:2rem;}
+.timeline::before{content:'';position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:linear-gradient(to bottom,var(--button),rgba(88,101,242,0.1));border-radius:2px;}
+.entry{position:relative;margin-bottom:2.5rem;opacity:0;transform:translateX(-16px);animation:slideIn 0.45s ease forwards;}
+.entry:nth-child(1){animation-delay:.05s}.entry:nth-child(2){animation-delay:.12s}.entry:nth-child(3){animation-delay:.19s}
+.entry:nth-child(4){animation-delay:.26s}.entry:nth-child(5){animation-delay:.33s}.entry:nth-child(6){animation-delay:.40s}
+.entry:nth-child(7){animation-delay:.47s}.entry:nth-child(8){animation-delay:.54s}.entry:nth-child(9){animation-delay:.61s}
+@keyframes slideIn{to{opacity:1;transform:translateX(0);}}
+.entry-dot{position:absolute;left:-2rem;top:0.5rem;width:16px;height:16px;border-radius:50%;background:var(--button);box-shadow:0 0 0 3px rgba(88,101,242,0.25),0 0 12px rgba(88,101,242,0.4);transform:translateX(-2px);}
+.entry-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem 1.6rem;box-shadow:0 8px 24px rgba(0,0,0,0.3);transition:border-color 0.2s;}
+.entry-card:hover{border-color:rgba(88,101,242,0.4);}
+.entry-top{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.5rem;flex-wrap:wrap;}
+.version-badge{background:rgba(88,101,242,0.15);color:#a0a8ff;border:1px solid rgba(88,101,242,0.3);padding:0.2rem 0.65rem;border-radius:999px;font-size:0.75rem;font-weight:700;}
+.entry-date{font-size:0.78rem;color:var(--muted);}
+.entry-title{font-size:1.05rem;font-weight:700;margin-bottom:0.75rem;}
+.entry-items{list-style:none;display:flex;flex-direction:column;gap:0.35rem;}
+.entry-items li{font-size:0.88rem;color:var(--muted);padding-left:1.1rem;position:relative;}
+.entry-items li::before{content:'▸';position:absolute;left:0;color:var(--accent);font-size:0.7rem;top:0.15rem;}
+.empty{text-align:center;padding:4rem 2rem;color:var(--muted);}
+.empty .icon{font-size:3rem;margin-bottom:1rem;}
+.skel-entry{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.4rem 1.6rem;margin-bottom:2.5rem;opacity:0.5;}
+.skel-line{height:13px;border-radius:6px;background:#2a3045;margin-bottom:10px;animation:shimmer 1.4s infinite;}
+.skel-line.s{width:30%}.skel-line.m{width:55%}.skel-line.l{width:85%}
+@keyframes shimmer{0%,100%{opacity:.5}50%{opacity:.8}}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<main class="container">
+  <div class="page-header">
+    <a href="index.html" class="back-link">← Back to Download Hub</a>
+    <h1>📋 Changelog</h1>
+    <p>A history of everything added and updated on Download Hub.</p>
+  </div>
+  <div class="timeline" id="timeline">
+    <div class="skel-entry" style="margin-left:0"><div class="skel-line s"></div><div class="skel-line m"></div><div class="skel-line l"></div></div>
+    <div class="skel-entry" style="margin-left:0"><div class="skel-line s"></div><div class="skel-line m"></div><div class="skel-line l"></div></div>
+  </div>
+</main>
+<script>
+async function loadChangelog() {
+  const timeline = document.getElementById('timeline');
+  try {
+    const entries = await fetch('changelog.json?v=' + Date.now()).then(r => r.json());
+    timeline.innerHTML = '';
+    if (!entries.length) {
+      document.querySelector('.timeline').style.paddingLeft = '0';
+      const s = document.createElement('style'); s.textContent = '.timeline::before{display:none}'; document.head.appendChild(s);
+      timeline.innerHTML = '<div class="empty"><div class="icon">📭</div><p>No changelog entries yet. Check back soon!</p></div>';
+      return;
+    }
+    [...entries].sort((a,b) => new Date(b.date)-new Date(a.date)).forEach(entry => {
+      const el = document.createElement('div');
+      el.className = 'entry';
+      const dateStr = new Date(entry.date+'T12:00:00').toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+      el.innerHTML = `<div class="entry-dot"></div><div class="entry-card"><div class="entry-top"><span class="version-badge">${esc(entry.version)}</span><span class="entry-date">${esc(dateStr)}</span></div><div class="entry-title">${esc(entry.title)}</div><ul class="entry-items">${entry.items.map(i=>`<li>${esc(i)}</li>`).join('')}</ul></div>`;
+      timeline.appendChild(el);
+    });
+  } catch { timeline.innerHTML = '<p style="color:var(--muted);padding:1rem">Failed to load changelog.</p>'; }
+}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+loadChangelog();
+const canvas=document.getElementById('stars'),ctx=canvas.getContext('2d');let w,h,stars;
+function resize(){w=canvas.width=innerWidth;h=canvas.height=innerHeight;}
+function createStars(n=160){stars=Array.from({length:n},()=>({x:Math.random()*w,y:Math.random()*h,z:Math.random()*0.8+0.2,r:Math.random()*1.2+0.3}));}
+function draw(){ctx.fillStyle='#0f1115';ctx.fillRect(0,0,w,h);for(const s of stars){ctx.globalAlpha=s.z;ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();s.y+=s.z*0.3;if(s.y>h){s.y=0;s.x=Math.random()*w;}}ctx.globalAlpha=1;requestAnimationFrame(draw);}
+window.addEventListener('resize',()=>{resize();createStars();});resize();createStars();draw();
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "banner": {
+    "enabled": false,
+    "message": "🎉 Welcome to Download Hub!",
+    "color": "blue"
+  },
+  "supabase": {
+    "url": "",
+    "anonKey": ""
+  }
+}
