@@ -62,5 +62,15 @@
       "Added / to focus in search bar",
       "Added changelog"
     ]
+  },
+  {
+    "id": "cl-1775754495274",
+    "date": "2026-04-09",
+    "version": "v7",
+    "title": "Proxy for life",
+    "items": [
+      "Added DogeUB proxy",
+      "Added Utopia proxy"
+    ]
   }
 ]
