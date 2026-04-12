@@ -178,5 +178,14 @@
     "fileType": "ZIP",
     "description": "Games",
     "asset": "Lebron-games.zip"
+  },
+  {
+    "id": "utopia-proxy",
+    "tag": "HTML",
+    "name": "Utopia Proxy",
+    "version": "1.0",
+    "fileType": "HTML",
+    "description": "UTOPIA PROXY in a FILE",
+    "asset": "Utopia_PROXY.html"
   }
 ]
