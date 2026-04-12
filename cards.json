@@ -1,5 +1,14 @@
 [
   {
+    "id": "roblox",
+    "tag": "CLIENT",
+    "name": "ROBLOX",
+    "version": "1.0",
+    "fileType": "HTML",
+    "description": "ROBLOX IN A FILE\nNOTE: if it doesn't work switch to the games menu and then click Roblox and it should work",
+    "asset": "Roblox.html"
+  },
+  {
     "id": "gn-math",
     "tag": "ZIP",
     "name": "gn-math",
@@ -7,6 +16,15 @@
     "fileType": "ZIP",
     "description": "Mathematics utility packaged as a ZIP file.",
     "asset": "gn-math.zip"
+  },
+  {
+    "id": "dogeub-proxy",
+    "tag": "TOOL",
+    "name": "DogeUB PROXY",
+    "version": "1.0",
+    "fileType": "HTML",
+    "description": "FINALLY have proxys working in a browser locally executed via HTML. \nYour typical proxy, with games, but in a file.",
+    "asset": "DogeUB_PROXY.html"
   },
   {
     "id": "noah-s-tutoring",
@@ -162,12 +180,30 @@
     "asset": "Lebron-games.zip"
   },
   {
-    "id": "dogeub-proxy",
-    "tag": "TOOL",
-    "name": "DogeUB PROXY",
+    "id": "utopia-proxy",
+    "tag": "HTML",
+    "name": "Utopia Proxy",
     "version": "1.0",
     "fileType": "HTML",
-    "description": "FINALLY have proxys working in a browser locally executed via HTML. \nYour typical proxy, with games, but in a file.",
-    "asset": "DogeUB_PROXY.html"
+    "description": "UTOPIA PROXY in a FILE",
+    "asset": "Utopia_PROXY.html"
+  },
+  {
+    "id": "galaxy-v6",
+    "tag": "TOOL",
+    "name": "Galaxy-v6",
+    "version": "6.0",
+    "fileType": "ZIP",
+    "description": "WORKING Roblox, proxy, and movies",
+    "asset": "GalaxyV6.html"
+  },
+  {
+    "id": "strongdog",
+    "tag": "CLIENT",
+    "name": "StrongDog",
+    "version": "1.0",
+    "fileType": "HTML",
+    "description": "StrongDog IS BACK",
+    "asset": "StrongDog.html"
   }
 ]
