@@ -1,12 +1,12 @@
 [
   {
     "id": "gn-math",
-    "tag": "ZIP",
+    "tag": "HTML",
     "name": "gn-math",
-    "version": "1.0",
-    "fileType": "ZIP",
-    "description": "Mathematics utility packaged as a ZIP file.",
-    "asset": "gn-math.zip"
+    "version": "1.1",
+    "fileType": "HTML",
+    "description": "FIXED\nMathematics utility packaged as a ZIP file.",
+    "asset": "Gn-Math.html"
   },
   {
     "id": "dogeub-proxy",
@@ -187,5 +187,50 @@
     "fileType": "HTML",
     "description": "StrongDog IS BACK",
     "asset": "StrongDog.html"
+  },
+  {
+    "id": "fern",
+    "tag": "HTML",
+    "name": "Fern",
+    "version": "1.0",
+    "fileType": "HTML",
+    "description": "Fern Proxy say less",
+    "asset": "Fern.html"
+  },
+  {
+    "id": "pizzaedition-html",
+    "tag": "HTML",
+    "name": "PizzaEdition.html",
+    "version": "1.0",
+    "fileType": "HTML",
+    "description": "PizzaEdition kinda buggy",
+    "asset": "PizzaEdition.html"
+  },
+  {
+    "id": "unlockedzone",
+    "tag": "TOOL",
+    "name": "unlockedzone",
+    "version": "5.0",
+    "fileType": "HTML",
+    "description": "Proxy + Games + Apps, pretty goated",
+    "asset": "unblockzone v5.html"
+  },
+  {
+    "id": "boredom",
+    "tag": "HTML",
+    "name": "Boredom",
+    "version": "2.0",
+    "fileType": "HTML",
+    "description": "Proxy and games AND discord (widget).",
+    "asset": "Boredom v2.html"
+  },
+  {
+    "id": "boredom",
+    "tag": "HTML",
+    "name": "Boredom",
+    "version": "2.0",
+    "fileType": "HTML",
+    "description": "A proxy, few games, and a discord widget.",
+    "asset": "Boredom v2.html"
   }
 ]
